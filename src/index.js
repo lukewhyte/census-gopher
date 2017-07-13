@@ -1,3 +1,8 @@
 #! /usr/bin/env node
+//flow
 
-console.log('Get \'em gopher!!!!');
+//import buildQueries
+
+const args = process.argv.slice(2);
+
+console.log(args)
