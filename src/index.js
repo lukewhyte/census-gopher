@@ -1,8 +1,18 @@
 #! /usr/bin/env node
 //flow
 
-//import buildQueries
+'use strict';
 
-const args = process.argv.slice(2);
+import 'babel-polyfill';
 
-console.log(args)
+import parseArguments from './parseArguments';
+import buildQueries from './buildQueries';
+
+// parse arguments and pass them to buildQueries
+
+const main = async () => {
+	const queriesArr = await buildQueries(parseArguments(process.argv.slice(2)));
+	console.log(queriesArr);
+}
+
+main();
