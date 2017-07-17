@@ -11,6 +11,8 @@ const keyMap = {
 	blockgroup: val => val,
 	congressionaldistrict: val => val,
 	target: val => splitScope(val),
+	variables: val => splitVariables(val),
+	years: val => splitYears(val),
 };
 
 const splitArg = arg => {
@@ -30,6 +32,14 @@ const splitScope = val => {
 		const scope = scopeStr.split(',');
 		return { key: target, val: scope };
 	}
+};
+
+const splitVariables = val => {
+	return val.split(',');
+};
+
+const splitYears = val => {
+	return val.split(',');
 };
 
 const switchboard = (result, arg) => {

@@ -9,30 +9,45 @@ import * as handleRequests from './handleRequests';
 // use switch logic to peel back from scope, verify requirements and pluck their numerical values
 // select a request handler and fire away
 
-const getMap = async (vars, varMap) => {
-	let result = {}, key, val, requestor;
+const getStaticGeography = async (vars, varMap) => {
+	let geoHash = {}, key, val, requestor;
 	for (let i = 0; i < varMap.length; i++) {
 		key = varMap[i];
 		requestor = handleRequests.getGeoRequest(key);
-		val = await requestor(key, vars[key], result);
+		val = await requestor(key, vars[key], geoHash);
 
 		if (!val) throw new Error('There was an error in the geo request');
-		result[key] = val;
+		geoHash[key] = val;
 	}
-	return result;
+	return geoHash;
+};
+
+const getDynamicGeography = async (geoHash, geoToMine) => {
+	let key, val, requestor;
+	for (let i = 0; i < varMap.length; i++) {
+		key = varMap[i];
+		requestor = handleRequests.getGeoRequest(key);
+		val = await requestor(key, vars[key], geoHash);
+
+		if (!val) throw new Error('There was an error in the geo request');
+		geoHash[key] = val;
+	}
+	return geoHash;
 };
 
 export default (vars) => {
 	return new Promise(async (resolve, reject) => {
-		const { target, scope, varMap } = mapVariables.unpackVars(vars);
+		const { target, geoToMine, varMap } = mapVariables.unpackVars(vars);
+
+		console.log(target, geoToMine, varMap)
 		
-		if (!mapVariables.haveFullScope(vars, scope, varMap)) {
+		if (!mapVariables.haveFullScope(vars, varMap)) {
 			return reject('You\re request is missing necessary geographical parameters, please check the Readme for format deatils: https://github.com/sa-express-news/census-gopher#readme');
 		}
 
 		return resolve(
-			getMap(vars, varMap)
-			.then(map => map)
+			getStaticGeography(vars, varMap)
+			.then(geoHash => geoHash)
 			.catch(err => console.error(err))
 		);
 	});
