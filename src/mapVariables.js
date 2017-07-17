@@ -15,9 +15,9 @@ export const unpackVars = vars => {
 	const target = vars.target;
 	const map 	 = scopeMaps[target.key];
 	const scope  = getScope(vars, map);
-	const geoToMine = map.slice(0, map.indexOf(scope)).concat([target.key]);
+	const dynamicGeoKeys = map.slice(0, map.indexOf(scope)).reverse();
 
-	return { target, geoToMine, varMap: map.slice(map.indexOf(scope)).reverse() };
+	return { target, dynamicGeoKeys, staticGeoKeys: map.slice(map.indexOf(scope)).reverse() };
 };
 
-export const haveFullScope = (vars, map) => _.every(map, key => vars[key]);
+export const haveFullScope = (map, vars) => _.every(map, key => vars[key]);

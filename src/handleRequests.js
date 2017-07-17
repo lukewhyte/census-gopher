@@ -5,6 +5,8 @@ require('dotenv').config();
 import fetch from 'isomorphic-fetch';
 import _ from 'lodash';
 
+import { getAll, pluckFips, pluckTractId } from './handleResponses';
+
 const baseUrl = 'http://api.census.gov/data/2015/acs5?';
 const apiKey = process.env.API_KEY;
 
@@ -16,48 +18,37 @@ const getParentString = parents => {
 	return result;
 };
 
-const pluckFips = (target, response) => {
-	let curr, geo, fips;
-	for (let i = 0; i < response.length; i++) {
-		curr = response[i];
-		geo = curr[0];
-		fips = curr[curr.length - 1];
-		
-		if (target.toLowerCase() === geo.toLowerCase()) return fips;
-	}
-	throw new Error(`${target} isn\'t in the API response`);
-	return null;
-};
-
-const getCountyOrState = (key, target, parents, isTract=false) => {
+const makeGeoRequest = (key, parents) => {
 	const parentString = getParentString(parents);
 	return fetch(`${baseUrl}get=NAME&for=${key}:*${parentString}&key=${apiKey}`).then(response => {
-		if (response.status >= 400) {
-        	throw new Error("Bad response from server");
-    	}
+		if (response.status >= 400) throw new Error("Bad response from server");
     	return response.json();
-	})
-	.then(response => pluckFips(target, response, isTract))
-	.catch(err => console.error(err));
+	});
+};
+
+const getState = (key, target, parents) => {
+	return makeGeoRequest(key, parents)
+		.then(response => target === '*' ? getAll(response) : pluckFips(target, response))
+		.catch(err => console.error(err));
+};
+
+const getCounty = (key, target, parents) => {
+	return makeGeoRequest(key, parents)
+		.then(response => target === '*' ? getAll(response) : pluckFips(`${target} county, texas`, response))
+		.catch(err => console.error(err));
 };
 
 const getTract = (key, target, parents) => {
-	const parentString = getParentString(parents);
-	return fetch(`${baseUrl}get=NAME&for=${key}:*${parentString}&key=${apiKey}`).then(response => {
-		if (response.status >= 400) {
-        	throw new Error("Bad response from server");
-    	}
-    	return response.json();
-	})
-	.then(response => _.first(response, tract => tract[tract.length - 1] === target))
-	.catch(err => console.error(err));
+	return makeGeoRequest(key, parents)
+		.then(response => target === '*' ? getAll(response) : pluckTractId(response))
+		.catch(err => console.error(err));
 };
 
 const geoRequestMap = {
-	state: (key, target, parents) => getCountyOrState(key, target, parents),
-	county: (key, target, parents) => getCountyOrState(key, `${target} county, texas`, parents),
+	state: (key, target, parents) => getState(key, target, parents),
+	county: (key, target, parents) => getCounty(key, target, parents),
 	tract: (key, target, parents) => getTract(key, target, parents),
-	congressionalDistrict: (key, target, parents) => getCountyOrState(key, target, parents), // obviously not ready
+	congressionalDistrict: (key, target, parents) => getCounty(key, target, parents), // obviously not ready
 };
 
 export const getGeoRequest = key => {
