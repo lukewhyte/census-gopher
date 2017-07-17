@@ -22,17 +22,14 @@ const pluckFips = (target, response) => {
 		curr = response[i];
 		geo = curr[0];
 		fips = curr[curr.length - 1];
-		if (typeof target === 'string') {
-			if (target.toLowerCase() === geo.toLowerCase()) return fips;
-		} else {
-			if (target === geo) return fips;
-		}
+		
+		if (target.toLowerCase() === geo.toLowerCase()) return fips;
 	}
 	throw new Error(`${target} isn\'t in the API response`);
 	return null;
 };
 
-const getBaseGeography = (key, target, parents, isTract=false) => {
+const getCountyOrState = (key, target, parents, isTract=false) => {
 	const parentString = getParentString(parents);
 	return fetch(`${baseUrl}get=NAME&for=${key}:*${parentString}&key=${apiKey}`).then(response => {
 		if (response.status >= 400) {
@@ -57,10 +54,10 @@ const getTract = (key, target, parents) => {
 };
 
 const geoRequestMap = {
-	state: (key, target, parents) => getBaseGeography(key, target, parents),
-	county: (key, target, parents) => getBaseGeography(key, `${target} county, texas`, parents),
+	state: (key, target, parents) => getCountyOrState(key, target, parents),
+	county: (key, target, parents) => getCountyOrState(key, `${target} county, texas`, parents),
 	tract: (key, target, parents) => getTract(key, target, parents),
-	congressionalDistrict: (key, target, parents) => getBaseGeography(key, target, parents),
+	congressionalDistrict: (key, target, parents) => getCountyOrState(key, target, parents), // obviously not ready
 };
 
 export const getGeoRequest = key => {
