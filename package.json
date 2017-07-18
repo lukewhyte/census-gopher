@@ -14,6 +14,7 @@
     "flow": "flow",
     "test": "mocha -w --require babel-polyfill --compilers js:babel-register",
     "dev": "babel-node src/index.js",
+    "lint": "jshint .",
     "validate": "npm ls"
   },
   "repository": {

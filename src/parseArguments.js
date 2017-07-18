@@ -11,7 +11,7 @@ const keyMap = {
 	blockgroup: val => val,
 	congressionaldistrict: val => val,
 	target: val => splitScope(val),
-	variables: val => splitVariables(val),
+	vars: val => splitVariables(val),
 	years: val => splitYears(val),
 };
 

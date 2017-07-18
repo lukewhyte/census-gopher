@@ -5,7 +5,7 @@ require('dotenv').config();
 import fetch from 'isomorphic-fetch';
 import _ from 'lodash';
 
-import { getAll, pluckFips, pluckTractId } from './handleResponses';
+import { getAll, pluckFips, pluckTractId } from './handleGeoResponses';
 
 const baseUrl = 'http://api.census.gov/data/2015/acs5?';
 const apiKey = process.env.API_KEY;
@@ -51,6 +51,6 @@ const geoRequestMap = {
 	congressionalDistrict: (key, target, parents) => getCounty(key, target, parents), // obviously not ready
 };
 
-export const getGeoRequest = key => {
+export default key => {
 	return geoRequestMap[key];
 }

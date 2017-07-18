@@ -12,9 +12,9 @@ const scopeMaps = {
 const getScope = (vars, map) => _.find(map, key => vars[key]);
 
 export const unpackVars = vars => {
-	const target = vars.target;
-	const map 	 = scopeMaps[target.key];
-	const scope  = getScope(vars, map);
+	const target 		 = vars.target;
+	const map 	 		 = scopeMaps[target.key];
+	const scope  		 = getScope(vars, map);
 	const dynamicGeoKeys = map.slice(0, map.indexOf(scope)).reverse();
 
 	return { target, dynamicGeoKeys, staticGeoKeys: map.slice(map.indexOf(scope)).reverse() };

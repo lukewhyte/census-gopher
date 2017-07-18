@@ -3,18 +3,18 @@
 import _ from 'lodash';
 
 import * as mapVariables from './mapVariables';
-import * as handleRequests from './handleRequests';
+import handleGeoRequests from './handleGeoRequests';
 
 // function that accepts arguments it knows keys for
 // use switch logic to peel back from scope, verify requirements and pluck their numerical values
 // select a request handler and fire away
 
-const getStaticGeography = async (vars, staticGeoKeys) => {
+const getStaticGeography = async (staticGeoKeys, vars) => {
 	let geoHash = {}, key, val, requestor, i;
 	
 	for (i = 0; i < staticGeoKeys.length; i++) {
 		key = staticGeoKeys[i];
-		requestor = handleRequests.getGeoRequest(key);
+		requestor = handleGeoRequests(key);
 
 		val = await requestor(key, vars[key], geoHash);
 		if (!val) throw new Error('There was an error in the geo request');
@@ -25,21 +25,21 @@ const getStaticGeography = async (vars, staticGeoKeys) => {
 	return geoHash;
 };
 
-const buildGeoTree = (parents, geoHash) => _.reduce(parents, (result, parent) => {
-	if (!result[parent]) {
-		return result[parent] = {};
-	} else {
-		return result[parent];
-	}
-}, geoHash);
-
 const getDynamicGeography = async (dynamicGeoKeys, geoHash) => {
 	const lastBranch = dynamicGeoKeys.length - 1;
 
+	const buildTree = (parents, geoHash) => _.reduce(parents, (result, parent) => {
+		if (!result[parent]) {
+			return result[parent] = {};
+		} else {
+			return result[parent];
+		}
+	}, geoHash);
+
 	const branchGenerator = async (keys, currBranch=0, parents=['varTree'], pastBranches=Object.assign({}, geoHash)) => {
-		const branch 	= buildGeoTree(parents, geoHash),
+		const branch 	= buildTree(parents, geoHash),
 			  geoKey 	= dynamicGeoKeys[currBranch],
-			  requestor = handleRequests.getGeoRequest(geoKey);
+			  requestor = handleGeoRequests(geoKey);
 
 		let val = await requestor(geoKey, '*', pastBranches);
 		if (!val) throw new Error(`There was an error in the geo request for ${geoKey}`);
@@ -73,8 +73,9 @@ export default (vars) => {
 		}
 
 		return resolve(
-			getStaticGeography(vars, staticGeoKeys)
+			getStaticGeography(staticGeoKeys, vars)
 			.then(getDynamicGeography.bind(null, dynamicGeoKeys))
+			.then(geoHash => Object.assign({}, geoHash, { vars: vars.vars, years: vars.years, target: vars.target }))
 			.catch(err => console.error(err))
 		);
 	});
