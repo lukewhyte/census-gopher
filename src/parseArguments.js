@@ -13,6 +13,7 @@ const keyMap = {
 	target: val => splitScope(val),
 	vars: val => splitVariables(val),
 	years: val => splitYears(val),
+	filename: val => val,
 };
 
 const splitArg = arg => {

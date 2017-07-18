@@ -9,7 +9,14 @@ const scopeMaps = {
 	congressionaldistrict: ['state'],
 };
 
+const variableMaps = {
+	blockgroup: 'block+group',
+	congressionaldistrict: 'congressional+district',
+};
+
 const getScope = (vars, map) => _.find(map, key => vars[key]);
+
+export const prepQueryVars = variable => variableMaps[variable];
 
 export const unpackVars = vars => {
 	const target 		 = vars.target;

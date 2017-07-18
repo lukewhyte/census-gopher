@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 
-import * as mapVariables from './mapVariables';
+import { haveFullScope, unpackVars } from './mapVariables';
 import handleGeoRequests from './handleGeoRequests';
 
 // function that accepts arguments it knows keys for
@@ -49,11 +49,13 @@ const getDynamicGeography = async (dynamicGeoKeys, geoHash) => {
 		} else {
 			for (let i = 0; i < val.length; i++) {
 				if (!branch[val[i]]) {
-					branch[val[i]] = {};
 					let nestedPastBranches = Object.assign({}, pastBranches);
-					let nestedParents = parents.concat([val[i]]);
-					let nestedCurrBranch = currBranch + 1;
+					let nestedParents 	   = parents.concat([val[i]]);
+					let nestedCurrBranch   = currBranch + 1;
+
 					nestedPastBranches[geoKey] = val[i];
+					branch[val[i]] = {};
+					
 					await branchGenerator(val, nestedCurrBranch, nestedParents, nestedPastBranches);
 				}
 			}
@@ -66,16 +68,15 @@ const getDynamicGeography = async (dynamicGeoKeys, geoHash) => {
 
 export default (vars) => {
 	return new Promise(async (resolve, reject) => {
-		const { target, dynamicGeoKeys, staticGeoKeys } = mapVariables.unpackVars(vars);
+		const { target, dynamicGeoKeys, staticGeoKeys } = unpackVars(vars);
 		
-		if (!mapVariables.haveFullScope(staticGeoKeys, vars)) {
+		if (!haveFullScope(staticGeoKeys, vars)) {
 			return reject('You\re request is missing necessary geographical parameters, please check the Readme for format deatils: https://github.com/sa-express-news/census-gopher#readme');
 		}
-
 		return resolve(
 			getStaticGeography(staticGeoKeys, vars)
 			.then(getDynamicGeography.bind(null, dynamicGeoKeys))
-			.then(geoHash => Object.assign({}, geoHash, { vars: vars.vars, years: vars.years, target: vars.target }))
+			.then(geoHash => Object.assign({}, geoHash, { vars: vars.vars, years: vars.years, filename: vars.filename, target, dynamicGeoKeys }))
 			.catch(err => console.error(err))
 		);
 	});
