@@ -5,14 +5,14 @@ import _ from 'lodash';
 // Parse the command line arguments into required format
 
 const keyMap = {
-	state: val => val,
-	county: val => val,
-	tract: val => val,
-	blockgroup: val => val,
+	state: val => commaSplit(val),
+	county: val => commaSplit(val),
+	tract: val => commaSplit(val),
+	blockgroup: val => commaSplit(val),
 	congressionaldistrict: val => val,
 	target: val => splitScope(val),
-	vars: val => splitVariables(val),
-	years: val => splitYears(val),
+	vars: val => commaSplit(val),
+	years: val => commaSplit(val),
 	filename: val => val,
 };
 
@@ -35,11 +35,7 @@ const splitScope = val => {
 	}
 };
 
-const splitVariables = val => {
-	return val.split(',');
-};
-
-const splitYears = val => {
+const commaSplit = val => {
 	return val.split(',');
 };
 

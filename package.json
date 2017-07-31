@@ -44,6 +44,7 @@
     "chai": "^4.0.2",
     "chai-as-promised": "^7.0.0",
     "flow-bin": "^0.48.0",
+    "json-loader": "^0.5.7",
     "mocha": "^3.4.2",
     "precommit-hook": "^3.0.0"
   },

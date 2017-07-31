@@ -4,31 +4,37 @@ import _ from 'lodash';
 import XLSX from 'xlsx';
 import fs from 'fs';
 
+import apiVariables from './api-variables.json';
+
 const writeFile = (wb, filename) => XLSX.writeFile(wb, `./results/${filename}.xlsx`);
 
-const combineSheetArrays = data => _.reduce(data, (result, arr) => {
-	arr.shift();
-	return result.concat(arr);
-}, []);
+const prettifyHeader = data => {
+	data[0] = data[0].map(key => {
+		return apiVariables.variables[key] ? `${apiVariables.variables[key].label} | ${apiVariables.variables[key].concept}` : key;
+	});
+	return data;
+};
 
-const buildSheet = (wb, sheet) => {
+const combineYears = (sheetHash, sheet) => {
 	const { year, data } = sheet;
-	const header = data[0][0];
+	if (sheetHash[year]) {
+		sheetHash[year].concat(data.slice(1));
+	} else {
+		sheetHash[year] = prettifyHeader(data);
+	}
+	return sheetHash;
+};
 
-	let result = combineSheetArrays(data);
-	result.unshift(header);
-
-	let ws = XLSX.utils.aoa_to_sheet(result);
-
+const buildWorkbook = (wb, sheet, year) => {
+	let ws = XLSX.utils.aoa_to_sheet(sheet);
 	wb.SheetNames.push(year);
 	wb.Sheets[year] = ws;
 	return wb;
 };
 
-const buildWorkbook = workbookHash => _.reduce(workbookHash, buildSheet, { SheetNames: [], Sheets: {} });
-
-export default (workbookHash, filename) => {
-	const wb = buildWorkbook(workbookHash);
+export default (sheetArr, filename) => {
+	const sheetHash = _.reduce(sheetArr, combineYears, {});
+	const wb = _.reduce(sheetHash, buildWorkbook, { SheetNames: [], Sheets: {} });
 	writeFile(wb, filename);
 	console.log(`Successfully built workbook, ${filename}.xlsx`);
 }

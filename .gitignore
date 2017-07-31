@@ -2,7 +2,8 @@
 /node_modules
 
 # results
-/results
+/results/*
+!/results/.gitkeep 
 
 #npm error log
 npm-debug.log*

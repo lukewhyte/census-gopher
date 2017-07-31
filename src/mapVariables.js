@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 
-const scopeMaps = {
+export const scopeMaps = {
 	county: ['state'],
 	tract: ['county', 'state'],
 	blockgroup: ['tract', 'county', 'state'],
@@ -10,6 +10,9 @@ const scopeMaps = {
 };
 
 const variableMaps = {
+	state: 'state',
+	county: 'county',
+	tract: 'tract',
 	blockgroup: 'block+group',
 	congressionaldistrict: 'congressional+district',
 };
@@ -22,9 +25,9 @@ export const unpackVars = vars => {
 	const target 		 = vars.target;
 	const map 	 		 = scopeMaps[target.key];
 	const scope  		 = getScope(vars, map);
-	const dynamicGeoKeys = map.slice(0, map.indexOf(scope)).reverse();
+	const unknownGeoKeys = map.slice(0, map.indexOf(scope)).reverse();
 
-	return { target, dynamicGeoKeys, staticGeoKeys: map.slice(map.indexOf(scope)).reverse() };
+	return { target, unknownGeoKeys, knownGeoKeys: map.slice(map.indexOf(scope)).reverse() };
 };
 
 export const haveFullScope = (map, vars) => _.every(map, key => vars[key]);

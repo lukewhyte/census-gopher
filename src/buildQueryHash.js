@@ -9,75 +9,72 @@ import handleGeoRequests from './handleGeoRequests';
 // use switch logic to peel back from scope, verify requirements and pluck their numerical values
 // select a request handler and fire away
 
-const getStaticGeography = async (staticGeoKeys, vars) => {
-	let geoHash = {}, key, val, requestor, i;
-	
-	for (i = 0; i < staticGeoKeys.length; i++) {
-		key = staticGeoKeys[i];
-		requestor = handleGeoRequests(key);
+// we build an array of hashes featuring each of the known geo vars and then we pass it to the unknown vars and do the same
+// ultimately we'll have an array of hashes featuring all necessary variables for requests including years etc
 
-		val = await requestor(key, vars[key], geoHash);
-		if (!val) throw new Error('There was an error in the geo request');
-		
-		geoHash[key] = val;
+const wrongGeoParams = 'You\re request is missing necessary geographical parameters, please check the Readme for format deatils: https://github.com/sa-express-news/census-gopher#readme';
+
+const addKnownKeysToArr = (vars, arr, key) => {
+	let hash = arr.length > 0 ? arr[0] : {};
+	let curr = vars[key];
+	if (curr.length === 1) {
+		hash[key] = curr;
+		arr = [hash];
+	} else {
+		// should only be possible to have multiple values on last known geography
+		arr = [];
+		curr.forEach(geo => {
+			let currHash = Object.assign({}, hash, { [key]: geo });
+			arr.push(currHash);
+		});
 	}
+	return arr;
+};
+
+const getGeography = async (key, parents) => {
+	const requestor = handleGeoRequests(key);
+	return await requestor(key, parents);
+};
+
+const addTargetToArray = async (arr, target) => {
+	if (_.isArray(target.val)) {
+		// if a specific array of geo targets has been requested, all parent geo scope needs to be the same
+		if (arr.length !== 1) throw new Error(wrongGeoParams);
+		return target.val.map(val => Object.assign({}, arr[0], {
+			target: { key: target.key, val },
+		}));
+	} else {
+		return arr.map(hash => Object.assign({}, hash, { target: target }));
+	}
+};
+
+const getUnknownGeography = async (arr, unknownGeoKeys) => {
+	if (unknownGeoKeys.length === 0) return arr;
+	let res = [];
+	await Promise.all(unknownGeoKeys.map(async key => {
+		for (let i = 0; i < arr.length; i++) {
+			let geo = await getGeography(key, arr[i]);
+			geo.forEach(val => res.push(Object.assign({}, arr[i], { [key]: [val] })));
+		}
+	}));
+	return res;
+};
+
+const addNonGeoKeysToArr = (unknownKeyArr, vars) => _.reduce(vars.years, (res, year) => {
+	const nonGeo = { year: [year], vars: vars.vars };
+	const batch = unknownKeyArr.map(hash => Object.assign({}, hash, nonGeo));
+	return res.concat(batch);
+}, []);
+
+export default async vars => {
+	const { target, unknownGeoKeys, knownGeoKeys } = unpackVars(vars);
 	
-	return geoHash;
-};
+	if (!haveFullScope(knownGeoKeys, vars)) {
+		throw new Error(wrongGeoParams);
+	}
 
-const getDynamicGeography = async (dynamicGeoKeys, geoHash) => {
-	const lastBranch = dynamicGeoKeys.length - 1;
+	const knownKeyArr = _.reduce(knownGeoKeys, addKnownKeysToArr.bind(null, vars), []);
+	const fullGeoArr = await getUnknownGeography(knownKeyArr, unknownGeoKeys).then(arr => addTargetToArray(arr, vars.target));
 
-	const buildTree = (parents, geoHash) => _.reduce(parents, (result, parent) => {
-		if (!result[parent]) {
-			return result[parent] = {};
-		} else {
-			return result[parent];
-		}
-	}, geoHash);
-
-	const branchGenerator = async (keys, currBranch=0, parents=['varTree'], pastBranches=Object.assign({}, geoHash)) => {
-		const branch 	= buildTree(parents, geoHash),
-			  geoKey 	= dynamicGeoKeys[currBranch],
-			  requestor = handleGeoRequests(geoKey);
-
-		let val = await requestor(geoKey, '*', pastBranches);
-		if (!val) throw new Error(`There was an error in the geo request for ${geoKey}`);
-
-		if (lastBranch === currBranch) {
-			val.forEach(node => branch[node] = null);
-		} else {
-			for (let i = 0; i < val.length; i++) {
-				if (!branch[val[i]]) {
-					let nestedPastBranches = Object.assign({}, pastBranches);
-					let nestedParents 	   = parents.concat([val[i]]);
-					let nestedCurrBranch   = currBranch + 1;
-
-					nestedPastBranches[geoKey] = val[i];
-					branch[val[i]] = {};
-					
-					await branchGenerator(val, nestedCurrBranch, nestedParents, nestedPastBranches);
-				}
-			}
-		}
-	};
-
-	await branchGenerator(dynamicGeoKeys);
-	return geoHash;
-};
-
-export default (vars) => {
-	return new Promise(async (resolve, reject) => {
-		const { target, dynamicGeoKeys, staticGeoKeys } = unpackVars(vars);
-		
-		if (!haveFullScope(staticGeoKeys, vars)) {
-			return reject('You\re request is missing necessary geographical parameters, please check the Readme for format deatils: https://github.com/sa-express-news/census-gopher#readme');
-		}
-		return resolve(
-			getStaticGeography(staticGeoKeys, vars)
-			.then(getDynamicGeography.bind(null, dynamicGeoKeys))
-			.then(geoHash => Object.assign({}, geoHash, { vars: vars.vars, years: vars.years, filename: vars.filename, target, dynamicGeoKeys }))
-			.catch(err => console.error(err))
-		);
-	});
+	return addNonGeoKeysToArr(fullGeoArr, vars);
 };

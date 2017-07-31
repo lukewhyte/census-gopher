@@ -5,12 +5,10 @@ require('dotenv').config();
 import fetch from 'isomorphic-fetch';
 import _ from 'lodash';
 
-import { getAll, pluckFips, pluckTractId } from './handleGeoResponses';
-
 const baseUrl = 'http://api.census.gov/data/2015/acs5?';
 const apiKey = process.env.API_KEY;
 
-const getParentString = parents => {
+export const getParentString = parents => {
 	let result = '';
 	_.forEach(parents, (val, key) => {
 		result += `&in=${key}:${val}`;
@@ -26,26 +24,26 @@ const makeGeoRequest = (key, parents) => {
 	});
 };
 
-const getState = (key, target, parents) => {
+const getStates = (key, parents) => {
 	return makeGeoRequest(key, parents)
-		.then(response => target === '*' ? getAll(response) : pluckFips(target, response))
+		.then(res => res.slice(1).map(row => row[row.length - 1]))
 		.catch(err => console.error(err));
 };
 
-const getCounty = (key, target, parents) => {
+const getCounty = (key, parents) => {
 	return makeGeoRequest(key, parents)
-		.then(response => target === '*' ? getAll(response) : pluckFips(`${target} county, texas`, response))
+		.then(res => res.slice(1).map(row => row[row.length - 1]))
 		.catch(err => console.error(err));
 };
 
-const getTract = (key, target, parents) => {
+const getTract = (key, parents) => {
 	return makeGeoRequest(key, parents)
-		.then(response => target === '*' ? getAll(response) : pluckTractId(response))
+		.then(res => res.slice(1).map(row => row[row.length - 1]))
 		.catch(err => console.error(err));
 };
 
 const geoRequestMap = {
-	state: (key, target, parents) => getState(key, target, parents),
+	state: (states) => getStates(states),
 	county: (key, target, parents) => getCounty(key, target, parents),
 	tract: (key, target, parents) => getTract(key, target, parents),
 	congressionalDistrict: (key, target, parents) => getCounty(key, target, parents), // obviously not ready
