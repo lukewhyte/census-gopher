@@ -18,6 +18,6 @@ const main = async () => {
 	const workbookHash = await Promise.all(queryArr.map(async hash => await handleVarRequests(hash)))
 		.then(sheetArr => exportToExcel(sheetArr, vars.filename))
 		.catch(err => console.error(err));
-}
+};
 
 main();

@@ -18,7 +18,7 @@ const prettifyHeader = data => {
 const combineYears = (sheetHash, sheet) => {
 	const { year, data } = sheet;
 	if (sheetHash[year]) {
-		sheetHash[year].concat(data.slice(1));
+		sheetHash[year] = sheetHash[year].concat(data.slice(1));
 	} else {
 		sheetHash[year] = prettifyHeader(data);
 	}
