@@ -17,7 +17,14 @@ const handleError = hash => {
 	return [arr, arr];
 };
 
-const getRow = (url, hash) => {
+const stringToNum = cell => isNaN(cell) ? cell : parseFloat(cell, 10);
+
+const pruneData = data => data.map(child => {
+	if (_.isArray(child)) return pruneData(child);
+	else return stringToNum(child);
+});
+
+const getBatch = (url, hash) => {
 	return fetch(url)
 		.then(response => {
 			if (response.status >= 400) {
@@ -46,6 +53,7 @@ const buildUrl = hash => {
 };
 
 export default async hash => {
-	let data = await getRow(buildUrl(hash), hash);
+	const rawData = await getBatch(buildUrl(hash), hash);
+	const data = pruneData(rawData);
 	return { year: hash.year, data };
 };
