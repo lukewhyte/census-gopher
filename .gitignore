@@ -5,6 +5,9 @@
 /results/*
 !/results/.gitkeep 
 
+#production
+/build
+
 #npm error log
 npm-debug.log*
 
