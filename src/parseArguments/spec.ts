@@ -62,7 +62,7 @@ test('calling controller w/ key not in keyMap should set isSuccessful to false',
 	t.end();
 });
 
-test('passing arg \'target=county\' to controller should leave isSuccesful true and parse target to *', t => {
+test('run the whole parseArguments module', t => {
 	let args = ['ids=037836,873836', 'years=1997,1998', 'filename=blerk.csv', 'target=county'];
 	let result = parseArguments(args);
 	let expected = {
