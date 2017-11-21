@@ -2,21 +2,27 @@
 
 // interfaces
 import { 
-			VarsHash,
-			GeoKeysHash,
-			ParsedArguments,
-		} 						from './interfaces';
+	VarsHash,
+	GeoKeysHash,
+	ParsedArguments,
+} from './interfaces';
 
 // modules
 import parseArguments 		from './parseArguments';
-import varMappingUtils		from './varMappingUtils';
-import getMissingGeography 	from './getMissingGeography';
+import variableMappingUtils	from './variableMappingUtils';
+import getListOfQueries 	from './getListOfQueries';
 
-const vars: ParsedArguments 	= parseArguments(process.argv.slice(2));
-const geoKeysHash: GeoKeysHash	= varMappingUtils.unpackGeoKeys(vars);
+const parsedArguments: ParsedArguments 	= parseArguments(process.argv.slice(2));
 
-const buildWorkbookHash = async (vars: VarsHash) => {
-	const mainQueryArr = await getMissingGeography(vars);
-};
+if (parsedArguments.isSuccessful) {
+	const vars: VarsHash			= parsedArguments.payload;
+	const geoKeysHash: GeoKeysHash	= variableMappingUtils.unpackGeoKeys(vars);
 
-console.log(vars);
+	const buildWorkbookHash = async (vars: VarsHash) => {
+		const queryList = await getListOfQueries(vars);
+	};
+
+	console.log(vars);
+} else {
+	console.error('One or more of the arguments passed to CensusGopher was invalid, please check the Readme for format deatils: https://github.com/sa-express-news/census-gopher#readme');
+}

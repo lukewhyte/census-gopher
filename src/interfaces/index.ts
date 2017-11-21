@@ -1,3 +1,4 @@
+// the inputed target attribute should map to this interface
 interface GeoTarget {
 	key: string,
 	val: Array<string>,
@@ -23,5 +24,5 @@ export interface GeoKeysHash {
 // this is what the parseArguments model returns
 export interface ParsedArguments {
 	isSuccessful: boolean;
-	payload: Object;
+	payload: any;
 }
