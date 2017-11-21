@@ -1,5 +1,5 @@
-import { test } from 'tape';
-import parseArguments, { splitArg, commaSplit, splitTarget, controller } from './parseArguments';
+import * as test from 'tape';
+import parseArguments, { splitArg, commaSplit, splitTarget, controller } from './index';
 
 test('splitArg(\'hello=world\') should be split on \'=\' and return { key: \'hello\', val: \'world\' }', t => {
 	let result = splitArg('hello=world');
