@@ -17,11 +17,13 @@ const handleError = hash => {
 	return [arr, arr];
 };
 
-const stringToNum = cell => isNaN(cell) ? cell : parseFloat(cell, 10);
+const stringToNum = cell => !cell || isNaN(cell) ? cell : parseFloat(cell, 10);
 
 const pruneData = data => data.map(child => {
 	if (_.isArray(child)) return pruneData(child);
-	else return stringToNum(child);
+	else {
+		return stringToNum(child);
+	}
 });
 
 const getBatch = (url, hash) => {

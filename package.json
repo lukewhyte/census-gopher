@@ -7,7 +7,7 @@
     "gopher": "build/index.js"
   },
   "scripts": {
-    "test": "ts-node src/**/spec.ts",
+    "test": "ts-node node_modules/tape/bin/tape src/**/spec.ts",
     "dev": "build/index.js"
   },
   "repository": {
@@ -29,6 +29,7 @@
   "homepage": "https://github.com/sa-express-news/census-gopher#readme",
   "devDependencies": {
     "@types/node": "^8.0.53",
+    "@types/tape": "^4.2.31",
     "install": "^0.10.2",
     "npm": "^5.5.1",
     "tape": "^4.8.0",
