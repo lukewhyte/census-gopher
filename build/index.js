@@ -9,12 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// modules
 const parseArguments_1 = require("./parseArguments");
-const varMappingUtils_1 = require("./varMappingUtils");
-const getMissingGeography_1 = require("./getMissingGeography");
-const vars = parseArguments_1.default(process.argv.slice(2));
-const { knownGeoKeys, unknownGeoKeys } = varMappingUtils_1.default.unpackGeoKeys(vars);
-const buildWorkbookHash = (vars) => __awaiter(this, void 0, void 0, function* () {
-    const mainQueryArr = yield getMissingGeography_1.default(vars);
-});
-console.log(vars);
+const variableMappingUtils_1 = require("./variableMappingUtils");
+const getListOfQueries_1 = require("./getListOfQueries");
+const parsedArguments = parseArguments_1.default(process.argv.slice(2));
+if (parsedArguments.isSuccessful) {
+    const vars = parsedArguments.payload;
+    const geoKeysHash = variableMappingUtils_1.default.unpackGeoKeys(vars);
+    const buildWorkbookHash = (vars) => __awaiter(this, void 0, void 0, function* () {
+        const queryList = yield getListOfQueries_1.default(vars, geoKeysHash);
+        console.log(queryList);
+    });
+    buildWorkbookHash(vars);
+    // export func here
+}
+else {
+    console.error('One or more of the arguments passed to CensusGopher was invalid, please check the Readme for format deatils: https://github.com/sa-express-news/census-gopher#readme');
+}

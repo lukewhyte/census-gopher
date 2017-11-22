@@ -5,6 +5,7 @@ import {
 	VarsHash,
 	GeoKeysHash,
 	ParsedArguments,
+	VariableQuery,
 } from './interfaces';
 
 // modules
@@ -19,10 +20,12 @@ if (parsedArguments.isSuccessful) {
 	const geoKeysHash: GeoKeysHash	= variableMappingUtils.unpackGeoKeys(vars);
 
 	const buildWorkbookHash = async (vars: VarsHash) => {
-		const queryList = await getListOfQueries(vars);
+		const queryList = await getListOfQueries(vars, geoKeysHash);
+		console.log(queryList);
 	};
+	buildWorkbookHash(vars);
 
-	console.log(vars);
+	// export func here
 } else {
 	console.error('One or more of the arguments passed to CensusGopher was invalid, please check the Readme for format deatils: https://github.com/sa-express-news/census-gopher#readme');
 }

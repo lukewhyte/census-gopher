@@ -24,7 +24,7 @@ export const commaSplit = (val: string) => {
 // this function is used to parse the target geography
 export const splitTarget = (val: string) => {
 	if (val.indexOf(':') === -1) {
-		return { key: val, val: '*' }; // this signifies that the target is all of blank, eg: all the census tracts in the scope
+		return { key: val, val: ['*'] }; // this signifies that the target is all of blank, eg: all the census tracts in the scope
 	} else {
 		const [ target, scopeStr ] = val.split(':');
 		const scope = commaSplit(scopeStr);
