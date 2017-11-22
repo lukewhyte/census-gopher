@@ -148,18 +148,12 @@ test('addTargetToList splits GeoTargetArr into multiple GeoTarget objs inside qu
 	];
 	let result = addTargetToList(queryList, vars.target);
 	let expected = [
-		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: '003' }},
-		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: '003' }},
-		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: '003' }},
-		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: '003' }},
-		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: '003' }},
-		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: '003' }},
+		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: ['002', '003'] }},
+		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: ['002', '003'] }},
+		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: ['002', '003'] }},
+		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: ['002', '003'] }},
+		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: ['002', '003'] }},
+		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: ['002', '003'] }},
 	];
 	t.deepEqual(result, expected);
 	t.end();
@@ -170,27 +164,27 @@ test('addYearsToList: multiplies queryList by number of years, adding year param
 		years: ['2014', '2015'],
 	};
 	const queryList = [
-		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: '002' }},
-		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: '002' }},
+		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: ['002'] }},
+		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: ['002'] }},
+		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: ['002'] }},
+		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: ['002'] }},
+		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: ['002'] }},
+		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: ['002'] }},
 	];
 	let result = addYearsToList(queryList, vars.years);
 	let expected = [
-		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: '002' }, year: '2015'},
+		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: ['002'] }, year: '2015'},
 	];
 	t.deepEqual(result, expected);
 	t.end();
@@ -201,33 +195,33 @@ test('addIDsToList: add ids array as property on each hash in queryList', t => {
 		ids: ['q34af', 'asf3r4'],
 	};
 	const queryList = [
-		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: '002' }, year: '2014'},
-		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: '002' }, year: '2015'},
-		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: '002' }, year: '2015'},
+		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: ['002'] }, year: '2014'},
+		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: ['002'] }, year: '2015'},
+		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: ['002'] }, year: '2015'},
 	];
 	let result = addIDsToList(queryList, vars.ids);
 	let expected = [
-		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: '002' }, year: '2014', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: '002' }, year: '2014', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: '002' }, year: '2014', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: '002' }, year: '2014', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: '002' }, year: '2014', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: '002' }, year: '2014', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: '002' }, year: '2015', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: '002' }, year: '2015', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: '002' }, year: '2015', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: '002' }, year: '2015', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: '002' }, year: '2015', ids: ['q34af', 'asf3r4']},
-		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: '002' }, year: '2015', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: ['002'] }, year: '2014', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: ['002'] }, year: '2014', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: ['002'] }, year: '2014', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: ['002'] }, year: '2014', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: ['002'] }, year: '2014', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: ['002'] }, year: '2014', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970100', target: { key: 'county', val: ['002'] }, year: '2015', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970301', target: { key: 'county', val: ['002'] }, year: '2015', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970302', target: { key: 'county', val: ['002'] }, year: '2015', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970401', target: { key: 'county', val: ['002'] }, year: '2015', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: ['002'] }, year: '2015', ids: ['q34af', 'asf3r4']},
+		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: ['002'] }, year: '2015', ids: ['q34af', 'asf3r4']},
 	];
 	t.deepEqual(result, expected);
 	t.end();

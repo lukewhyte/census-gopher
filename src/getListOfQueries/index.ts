@@ -4,7 +4,6 @@
 import { 
 	VarsHash,
 	GeoKeysHash,
-	GeoTargetArr,
 	GeoTarget,
 	GeoIDHash,
 } from '../interfaces';
@@ -16,7 +15,7 @@ const getGeographyFromVars = (vars: VarsHash) => {
 	return (key: string) => vars[key];
 };
 
-// addGeographyToList involves three nested forloops, they are as follows:
+// addGeographyToList involves three nested for loops, they are as follows:
 // 1. iterates over the supplied geoKeys
 // 2. iterates over hashes stored in prevQueryList
 // 3. iterates over each geoId, the list of which is plucked using the geoKey, 
@@ -53,14 +52,8 @@ export const addUnknownGeographyToList = async (prevQueryList: Array<GeoIDHash>,
 	return await addGeographyToList(prevQueryList, unknownGeoKeys, vars, getGeographyFromAPI)
 };
 
-export const addTargetToList = (prevQueryList: Array<GeoIDHash>, target: GeoTargetArr) => {
-	const queryList: Array<any> = [];
-	target.val.forEach((val: string) => {
-		prevQueryList.forEach((hash: GeoIDHash) => {
-			queryList.push(Object.assign({}, hash, { target: { key: target.key, val } }));
-		});
-	});
-	return queryList;
+export const addTargetToList = (queryList: Array<any>, target: GeoTarget) => {
+	return queryList.map((hash: any) => Object.assign({}, hash, { target }));
 };
 
 export const addYearsToList = (prevQueryList: Array<any>, years: Array<string>) => {

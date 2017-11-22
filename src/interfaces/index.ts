@@ -1,12 +1,7 @@
-// the inputed target attribute should map to these interfaces
-export interface GeoTargetArr {
-	key: string,
-	val: Array<string>,
-};
-
+// the inputed target attribute should map to this interface
 export interface GeoTarget {
 	key: string,
-	val: string,
+	val: Array<string>,
 };
 
 // all possible input args can be seen in the VarsHash interface
@@ -15,7 +10,7 @@ export interface VarsHash {
 	county?: Array<string>;
 	tract?: Array<string>;
 	blockgroup?: Array<string>;
-	target: GeoTargetArr;
+	target: GeoTarget;
 	ids: Array<string>;
 	years: Array<string>;
 	filename: string;
@@ -37,10 +32,10 @@ export interface VariableQuery {
 	year: string;
 	ids: Array<string>;
 	target: GeoTarget;
-	state?: Array<string>;
-	county?: Array<string>;
-	tract?: Array<string>;
-	blockgroup?: Array<string>;
+	state?: string;
+	county?: string;
+	tract?: string;
+	blockgroup?: string;
 };
 
 // a hash of possible GeoIDs used to build queries

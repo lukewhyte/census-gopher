@@ -32,7 +32,7 @@ test('calling splitTarget w/o \':\' in the string should return { key: val, val:
 	let result = splitTarget('tract');
 	let expected = {
 		key: 'tract',
-		val: '*',
+		val: ['*'],
 	};
 	t.deepEqual(result, expected);
 	t.end();
@@ -68,7 +68,7 @@ test('run the whole parseArguments module', t => {
 	let expected = {
 		isSuccessful: true,
 		payload: { 
-			target: { key: 'county', val: '*' },
+			target: { key: 'county', val: ['*'] },
 			ids: [ '037836', '873836' ],
      		years: [ '1997', '1998' ],
      		filename: 'blerk.csv',
