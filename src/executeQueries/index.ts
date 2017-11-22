@@ -1,6 +1,7 @@
 require('dotenv').config();
 
-import * as fetch from 'isomorphic-fetch';
+import * as fetch 	from 'isomorphic-fetch';
+import *  as _ 		from 'lodash';
 
 // interfaces
 import { VariableQuery, GeoKeysHash, GeoTarget } from '../interfaces';
@@ -39,7 +40,8 @@ export const addParentsToString = (queryString: string, query: VariableQuery, ge
 	return queryString;
 };
 
-export const handleAPIError = (query: VariableQuery) => {};
+// mimicks a successful response, will create a row in spreadsheet where each cell reads 'No data'
+export const handleAPIError = (query: VariableQuery) => _.map(query as any, key => 'No data');
 
 export const getVariablesFromAPI = (queryString: string, query: VariableQuery) => {
 	return fetch(queryString).then(response => {
@@ -48,7 +50,7 @@ export const getVariablesFromAPI = (queryString: string, query: VariableQuery) =
 			return handleAPIError(query);
 		}
     	return response.json();
-	});
+	}).then(arr => arr.slice(1));
 };
 
 export default (queryList: Array<VariableQuery>, geoKeysHash: GeoKeysHash) => {
@@ -59,6 +61,6 @@ export default (queryList: Array<VariableQuery>, geoKeysHash: GeoKeysHash) => {
 		queryString = addTargetToString(queryString, query.target);
 		queryString = addParentsToString(queryString, query, geoKeys);
 		queryString += `key=${apiKey}`;
-		return await getVariablesFromAPI(queryString, query).then(); // go from here, catch errors above too.
+		return await getVariablesFromAPI(queryString, query).then();
 	}));
 };

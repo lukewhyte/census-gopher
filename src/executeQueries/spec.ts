@@ -7,6 +7,7 @@ import {
 	addTargetToString,
 	addParentsToString,
 	getVariablesFromAPI,
+	handleAPIError,
 } from './index';
 
 const apiKey = process.env.API_KEY;
@@ -68,7 +69,6 @@ test('getVariablesFromAPI: make a properly formed API request', async t => {
 	const query = `${baseURL}get=NAME,B01001_002E,B01001_026E&for=tract:*&in=state:48&in=county:259&key=${apiKey}`;
 	let result = await getVariablesFromAPI(query, hash);
 	let expected = [
-		[ 'NAME', 'B01001_002E', 'B01001_026E', 'state', 'county', 'tract' ],
 		[ 'Census Tract 9701, Kendall County, Texas', '3248', '3059', '48', '259', '970100' ],
 		[ 'Census Tract 9703.01, Kendall County, Texas', '2641', '3009', '48', '259', '970301' ],
 		[ 'Census Tract 9703.02, Kendall County, Texas', '2133', '2422', '48', '259', '970302' ],
@@ -76,6 +76,20 @@ test('getVariablesFromAPI: make a properly formed API request', async t => {
 		[ 'Census Tract 9704.02, Kendall County, Texas', '3315', '3530', '48', '259', '970402' ],
 		[ 'Census Tract 9705, Kendall County, Texas', '2754', '3102', '48', '259', '970500' ]
 	];
+	t.deepEqual(result, expected);
+	t.end();
+});
+
+test('handleAPIError: given a hash, map to an array with \'No data\' as a property for each key', t => {
+	const hash = {
+		state: '48',
+		county: '259',
+		target: { key: 'tract', val: ['*'] },
+		year: '2015',
+		ids: ['B01001_002E', 'B01001_026E']
+	};
+	let result = handleAPIError(hash);
+	let expected = ['No data', 'No data', 'No data', 'No data', 'No data'];
 	t.deepEqual(result, expected);
 	t.end();
 });
