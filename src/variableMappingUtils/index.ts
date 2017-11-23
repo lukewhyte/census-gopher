@@ -11,6 +11,8 @@ const scopeMaps = {
 	blockgroup: ['state', 'county', 'tract'],
 };
 
+export const parseBlockGroup = (key: string) => key === 'blockgroup' ? 'block+group' : key;
+
 export const sortGeoKeys = (vars: VarsHash, geoKeysHash: GeoKeysHash, key: string) => {
 	const { knownGeoKeys, unknownGeoKeys } = geoKeysHash;
 	if (vars[key]) {

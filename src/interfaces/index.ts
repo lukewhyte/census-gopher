@@ -45,3 +45,16 @@ export interface GeoIDHash {
 	tract?: string;
 	blockgroup?: string;
 };
+
+// this is what will be returned from variable API queries
+export interface SheetHash {
+	year: string;
+	header: Array<string>;
+	data: Array<Array<string | number>>;
+};
+
+// workbook for export
+export interface Workbook {
+	SheetNames: Array<string>;
+	Sheets: object;
+}

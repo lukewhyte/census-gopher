@@ -1,6 +1,7 @@
 import * as test from 'tape';
 import { addTargetToList, addYearsToList, addIDsToList, addKnownGeographyToList, addUnknownGeographyToList } from './index';
 import delawareAndRhodeIslandCensusTracts from './delawareRhodeIslandTracts';
+import allStatesFips from './allStatesFips';
 
 test('addKnownGeographyToList: three single id geographies', async t => {
 	const vars = {
@@ -131,6 +132,21 @@ test('addUnknownGeographyToList: two known states, get all counties and tracts',
 	t.end();
 });
 
+test('addUnknownGeographyToList: if there\'s no known geography, still populate', async t => {
+	const vars = {
+		target: { key: 'county', val: ['*'] },
+		ids: ['q34af', 'asf3r4'],
+		years: ['1998'],
+		filename: 'test.xlsx',
+	};
+	const unknownGeoKeys = ['state'];
+	const queryList = [{}];
+	let result = await addUnknownGeographyToList(queryList, unknownGeoKeys, vars);
+	let expected = allStatesFips;
+	t.deepEqual(result, expected);
+	t.end();
+});
+
 test('addTargetToList splits GeoTargetArr into multiple GeoTarget objs inside queryList', t => {
 	const vars = {
 		target: {
@@ -155,6 +171,20 @@ test('addTargetToList splits GeoTargetArr into multiple GeoTarget objs inside qu
 		{ state: '48', county: '259', tract: '970402', target: { key: 'county', val: ['002', '003'] }},
 		{ state: '48', county: '259', tract: '970500', target: { key: 'county', val: ['002', '003'] }},
 	];
+	t.deepEqual(result, expected);
+	t.end();
+});
+
+test('addTargetToList: if there are no geoKeys (searching for whole US), we still need to generate queryList', t => {
+	const vars = {
+		target: {
+			key: 'us',
+			val: ['*'],
+		}
+	};
+	const queryList = [{}];
+	let result = addTargetToList(queryList, vars.target);
+	let expected = [{ target: { key: 'us', val: ['*'] }},];
 	t.deepEqual(result, expected);
 	t.end();
 });

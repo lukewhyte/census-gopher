@@ -14,16 +14,18 @@ const parseArguments_1 = require("./parseArguments");
 const variableMappingUtils_1 = require("./variableMappingUtils");
 const getListOfQueries_1 = require("./getListOfQueries");
 const executeQueries_1 = require("./executeQueries");
+const exportToExcel_1 = require("./exportToExcel");
 const parsedArguments = parseArguments_1.default(process.argv.slice(2));
 if (parsedArguments.isSuccessful) {
     const vars = parsedArguments.payload;
     const geoKeysHash = variableMappingUtils_1.default.unpackGeoKeys(vars);
-    const buildWorkbookHash = (vars) => __awaiter(this, void 0, void 0, function* () {
+    const buildWorkbookArr = (vars) => __awaiter(this, void 0, void 0, function* () {
         const queryList = yield getListOfQueries_1.default(vars, geoKeysHash);
-        console.log(queryList);
         return executeQueries_1.default(queryList, geoKeysHash);
     });
-    buildWorkbookHash(vars).then(res => console.log(res));
+    buildWorkbookArr(vars).then((workbookArr) => {
+        exportToExcel_1.default(workbookArr, vars.filename);
+    }).catch(err => console.error(err));
 }
 else {
     console.error('One or more of the arguments passed to CensusGopher was invalid, please check the Readme for format deatils: https://github.com/sa-express-news/census-gopher#readme');
