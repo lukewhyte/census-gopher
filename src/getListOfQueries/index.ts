@@ -37,7 +37,7 @@ const getGeographyFromVars = (vars: VarsHash) => {
  *****************************************************************************************/
 export const addGeographyToList = async (prevQueryList: Array<GeoIDHash>, geoKeys: Array<string>, vars: VarsHash, getGeographyFunc: Function) => {
 	// this will be our returned array
-	let queryList: Array<GeoIDHash> = [{}];
+	let queryList: Array<GeoIDHash> = prevQueryList.length ? prevQueryList : [{}];
 	for (let i = 0; i < geoKeys.length; i++) {
 		// key = eg: 'state' or 'county'
 		let key: string = geoKeys[i];
