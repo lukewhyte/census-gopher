@@ -6,16 +6,9 @@
   "bin": {
     "gopher": "build/index.js"
   },
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "build": "./node_modules/.bin/babel src -d build",
-    "flow": "flow",
-    "test": "mocha -w --require babel-polyfill --compilers js:babel-register",
-    "dev": "babel-node src/index.js",
-    "lint": "jshint .",
-    "validate": "npm ls"
+    "test": "ts-node node_modules/tape/bin/tape src/**/spec.ts",
+    "dev": "build/index.js"
   },
   "repository": {
     "type": "git",
@@ -35,29 +28,20 @@
   },
   "homepage": "https://github.com/sa-express-news/census-gopher#readme",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-env": "^1.5.2",
-    "babel-preset-flow": "^6.23.0",
-    "babel-register": "^6.24.1",
-    "chai": "^4.0.2",
-    "chai-as-promised": "^7.0.0",
-    "flow-bin": "^0.48.0",
-    "json-loader": "^0.5.7",
-    "mocha": "^3.4.2",
-    "precommit-hook": "^3.0.0"
+    "@types/node": "^8.0.53",
+    "@types/tape": "^4.2.31",
+    "dotenv": "^4.0.0",
+    "install": "^0.10.2",
+    "npm": "^5.5.1",
+    "tape": "^4.8.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1"
   },
   "dependencies": {
-    "dotenv": "^4.0.0",
+    "@types/isomorphic-fetch": "0.0.34",
+    "@types/lodash": "^4.14.85",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
-    "request": "^2.81.0",
-    "xlsx": "^0.10.8"
-  },
-  "pre-commit": [
-    "lint",
-    "validate",
-    "test"
-  ]
+    "xlsx": "^0.11.6"
+  }
 }
