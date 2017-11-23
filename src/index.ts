@@ -19,7 +19,7 @@ import exportToExcel		from './exportToExcel';
 const parsedArguments: ParsedArguments 	= parseArguments(process.argv.slice(2));
 
 if (parsedArguments.isSuccessful) {
-	const vars: VarsHash			= parsedArguments.payload;
+	const vars: VarsHash = parsedArguments.payload;
 	const geoKeysHash: GeoKeysHash	= variableMappingUtils.unpackGeoKeys(vars);
 
 	const buildWorkbookArr = async (vars: VarsHash) => {
