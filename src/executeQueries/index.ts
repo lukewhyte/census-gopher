@@ -7,7 +7,7 @@ import *  as _ 		from 'lodash';
 import { VariableQuery, GeoKeysHash, GeoTarget } from '../interfaces';
 
 // modules
-import { parseBlockGroup } from '../variableMappingUtils';
+import { parseKeysForAPI } from '../variableMappingUtils';
 
 const baseUrl 	= 'https://api.census.gov/data';
 const apiKey 	= process.env.API_KEY;
@@ -33,7 +33,7 @@ export const addIDsToString = (queryString: string, ids: Array<string>) => {
 }
 
 export const addTargetToString = (queryString: string, target: GeoTarget) => {
-	queryString += `for=${parseBlockGroup(target.key)}:`;
+	queryString += `for=${parseKeysForAPI(target.key)}:`;
 	target.val.forEach((val: string, idx: number, vals: Array<string>) => {
 		queryString += val;
 		if (idx !== (vals.length - 1)) queryString += ',';

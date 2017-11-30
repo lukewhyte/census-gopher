@@ -17,7 +17,7 @@ const getGeographyFromVars = (vars: VarsHash) => {
 
 /*****************************************************************************************
  * addGeographyToList is the meat and potatoes here, but it isn't straightforward.
- * I'll describe what is going on here, but to better understand this function, 
+ * I'll describe what is going on, but to better understand this function, 
  * check out ./spec.ts, which features a number of tests with typical input data 
  * and expected output data.
  *
@@ -28,9 +28,9 @@ const getGeographyFromVars = (vars: VarsHash) => {
  * The function features three nested for loops. I'll describe from outer to center:
  * 	1. 	First loop iterates over the supplied geoKeys (strings like 'state' or 'county').
  *		These keys will be used to pluck the geoIds (eg: key: county, id: 259).
- * 	2.	The second loop iterates over the inputed prevQueryList. A copy of
- *		each one of the hashes in this array will need to be made for each geoID. The
- *		geoID will be added to said copy and it will be placed back in the queryList.
+ * 	2.	The second loop iterates over the inputed prevQueryList. In the third loop, a
+ *		copy of each one of the hashes in this array will need to be made for each geoID.
+ *		The geoID will be added to said copy and it will be placed back in the queryList.
  *	3.	Finally, after using the geoKey to retrieve an array of all associated geoIDs,
  *		we iterate over the geoIDs, associate them with the prevQueryList hashes and
  *		add them to the new queryList, which will be returned from the function.
