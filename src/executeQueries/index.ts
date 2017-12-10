@@ -22,6 +22,14 @@ export const buildResponseHeader = (queryList: Array<VariableQuery>, geoKeys: Ar
 	return header;
 };
 
+export const addYearToString = (queryString: string, year: string) => {
+	const newAPIFormatYears: Array<string> = ['2016', '2015']; // this will need to be updated and eventually removed
+	newAPIFormatYears.forEach((curr: string) => {
+		if (year === curr) year += '/acs';
+	});
+	return `${queryString}${year}/`;
+};
+
 export const addIDsToString = (queryString: string, ids: Array<string>) => {
 	queryString += 'get=NAME,';
 	ids.forEach((id: string, idx: number, ids: Array<string>) => {
@@ -30,7 +38,7 @@ export const addIDsToString = (queryString: string, ids: Array<string>) => {
 		else queryString += '&';
 	});
 	return queryString;
-}
+};
 
 export const addTargetToString = (queryString: string, target: GeoTarget) => {
 	queryString += `for=${parseBlockGroup(target.key)}:`;
@@ -82,7 +90,9 @@ export default (queryList: Array<VariableQuery>, geoKeysHash: GeoKeysHash) => {
 	const header: Array<string> = buildResponseHeader(queryList, geoKeys);
 
 	return Promise.all(queryList.map(async (query: VariableQuery) => {
-		let queryString: string = `${baseUrl}/${query.year}/acs5?`;
+		let queryString: string = `${baseUrl}/`;
+		queryString = addYearToString(queryString, query.year);
+		queryString += 'acs5?'; // soon, we should make acs1 an option too 
 		queryString = addIDsToString(queryString, query.ids);
 		queryString = addTargetToString(queryString, query.target);
 		queryString = addParentsToString(queryString, query, geoKeys);

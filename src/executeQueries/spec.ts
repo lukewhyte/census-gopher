@@ -3,6 +3,7 @@ require('dotenv').config();
 import * as test from 'tape';
 import { 
 	buildGeoKeyArray,
+	addYearToString,
 	addIDsToString,
 	addTargetToString,
 	addParentsToString,
@@ -23,6 +24,18 @@ test('buildGeoKeyArray: takes a GeoHashKey and concats the unknownKeys to the kn
 	let result = buildGeoKeyArray(geoKeyHash);
 	let expected = ['state', 'county', 'tract'];
 	t.deepEqual(result, expected);
+	t.end();
+});
+
+test('addYearToString: takes a queryString and a year, adds the correct path, accounting for variation in paths', t => {
+	const years = ['2016', '2013'];
+	const queryString = 'https://api.census.gov/data/';
+	let result = addYearToString(queryString, years[0]);
+	let expected = 'https://api.census.gov/data/2016/acs/';
+	t.equal(result, expected);
+	result = addYearToString(queryString, years[1]);
+	expected = 'https://api.census.gov/data/2013/';
+	t.equal(result, expected);
 	t.end();
 });
 
