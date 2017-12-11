@@ -25,3 +25,7 @@ npm run dev target=blockgroup county=259 state=48 years=2010 filename=kendall-ed
 npm run dev target=blockgroup county=259 state=48 years=2015,2010 filename=kendall-race-detailed ids=B03002_003E,B03002_004E,B03002_006E,B03002_012E,B03002_013E
 
 npm run dev target=county state=48 years=2015 filename=texas-population-2015  ids=B01001_001E
+
+npm run dev years=2016 target=county filename=education-attainment-under-college ids=B01001_001E,B15003_002E,B15003_003E,B15003_004E,B15003_005E,B15003_006E,B15003_007E,B15003_008E,B15003_009E,B15003_010E,B15003_011E,B15003_012E,B15003_013E,B15003_014E,B15003_015E,B15003_016E,B15003_017E,B15003_018E state=48
+
+npm run dev target=county state=48 filename=not-us-citizens ids=B05001_006E years=2016
