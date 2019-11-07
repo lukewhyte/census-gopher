@@ -8,6 +8,7 @@ import { ParsedArguments } from '../interfaces';
 const keyMap = {
 	state: val => commaSplit(val),
 	zipcode: val => commaSplit(val),
+	metro: val => commaSplit(val),
 	county: val => commaSplit(val),
 	tract: val => commaSplit(val),
 	blockgroup: val => commaSplit(val),

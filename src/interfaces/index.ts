@@ -10,6 +10,7 @@ export interface VarsHash {
 	county?: Array<string>;
 	tract?: Array<string>;
 	zipcode?: string;
+	metro?: string;
 	blockgroup?: Array<string>;
 	target: GeoTarget;
 	ids: Array<string>;
@@ -37,6 +38,7 @@ export interface VariableQuery {
 	county?: string;
 	tract?: string;
 	zipcode?: string;
+	metro?: string;
 	blockgroup?: string;
 };
 
@@ -46,6 +48,7 @@ export interface GeoIDHash {
 	county?: string;
 	tract?: string;
 	zipcode?: string;
+	metro?: string;
 	blockgroup?: string;
 };
 

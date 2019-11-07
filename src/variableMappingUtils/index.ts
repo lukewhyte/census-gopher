@@ -7,6 +7,7 @@ const scopeMaps = {
 	us: 		[],
 	state: 		[],
 	zipcode: 	[],
+	metro:		['state'],
 	county: 	['state'],
 	tract: 		['state', 'county'],
 	blockgroup: ['state', 'county', 'tract'],
@@ -17,7 +18,9 @@ export const parseKeysForAPI = (key: string) => {
 		case 'blockgroup':
 			return 'block+group';
 		case 'zipcode':
-			return 'zip%20code%20tabulation%20area';
+			return 'zip+code+tabulation+area';
+		case 'metro':
+			return 'metropolitan+statistical+area/micropolitan+statistical+area';
 		default:
 			return key;
 	}

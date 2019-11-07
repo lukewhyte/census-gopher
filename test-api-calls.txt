@@ -28,4 +28,10 @@ npm run dev target=county state=48 years=2015 filename=texas-population-2015  id
 
 npm run dev years=2016 target=county filename=education-attainment-under-college ids=B01001_001E,B15003_002E,B15003_003E,B15003_004E,B15003_005E,B15003_006E,B15003_007E,B15003_008E,B15003_009E,B15003_010E,B15003_011E,B15003_012E,B15003_013E,B15003_014E,B15003_015E,B15003_016E,B15003_017E,B15003_018E state=48
 
-npm run dev target=county state=48 filename=not-us-citizens ids=B05001_006E years=2016
+npm run dev target=zipcode state=48 filename=not-us-citizens ids=B05001_006E years=2016
+
+npm run dev target=tract state=48 filename=not-us-citizens-tract-pop ids=B01001_001E,B05001_006E years=2016
+
+npm run dev target=county state=48 years=2016 filename="tx-county-populations"  ids=B01001_001E
+
+npm run dev target=zipcode years=2016,2015,2014,2013,2012,2011 filename="zip-population"  ids=B01003_001E
