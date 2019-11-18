@@ -35,7 +35,7 @@ const getGeographyFromVars = (vars: VarsHash) => {
  *		we iterate over the geoIDs, associate them with the prevQueryList hashes and
  *		add them to the new queryList, which will be returned from the function.
  *****************************************************************************************/
-export const addGeographyToList = async (prevQueryList: Array<GeoIDHash>, geoKeys: Array<string>, vars: VarsHash, getGeographyFunc: Function) => {
+export const addGeographyToList = async (prevQueryList: Array<GeoIDHash>, geoKeys: Array<string>, acsType: number, getGeographyFunc: Function) => {
 	// this will be our returned array
 	let queryList: Array<GeoIDHash> = prevQueryList.length ? prevQueryList : [{}];
 	for (let i = 0; i < geoKeys.length; i++) {
@@ -47,7 +47,7 @@ export const addGeographyToList = async (prevQueryList: Array<GeoIDHash>, geoKey
 			// hash = {} or { state: '43' } etc.
 			let hash: GeoIDHash = prevQueryList[j];
 			// either pluck the geo ids array for the current key from vars eg: ['48'] or ['224', '345'] or get the ids from the Cenus API
-			let geoIds = await getGeographyFunc(key, hash);
+			let geoIds = await getGeographyFunc(key, hash, acsType);
 			for (let k = 0; k < geoIds.length; k++) {
 				let id: string = geoIds[k];
 				// build the current hash and push it to the new query list
@@ -62,12 +62,12 @@ export const addGeographyToList = async (prevQueryList: Array<GeoIDHash>, geoKey
 
 export const addKnownGeographyToList = async (prevQueryList: Array<GeoIDHash>, knownGeoKeys: Array<string>, vars: VarsHash) => {
 	// technically not an async, but running async b/c we're sharing higher order func (addGeographyToList) with addUnknownGeographyToList
-	return await addGeographyToList(prevQueryList, knownGeoKeys, vars, getGeographyFromVars(vars));
+	return await addGeographyToList(prevQueryList, knownGeoKeys, vars.acsType, getGeographyFromVars(vars));
 };
 
 export const addUnknownGeographyToList = async (prevQueryList: Array<GeoIDHash>, unknownGeoKeys: Array<string>, vars: VarsHash) => {
 	// this function mimics addKnownGeographyToList, except we need to ping census geo API for geoIds
-	return await addGeographyToList(prevQueryList, unknownGeoKeys, vars, getGeographyFromAPI)
+	return await addGeographyToList(prevQueryList, unknownGeoKeys, vars.acsType, getGeographyFromAPI)
 };
 
 export const addTargetToList = (queryList: Array<any>, target: GeoTarget) => {

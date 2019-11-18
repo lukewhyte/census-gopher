@@ -8,6 +8,7 @@ const mockVars = {
 	filename: 'test.xlsx',
 	ids: ['EED1110101', 'FFG1110101'],
 	years: ['2014', '2015'],
+	acsType: 1,
 };
 
 test('in sortGeoKeys, if key exists in supplied vars, add to knownGeoKeys, if not, add to unknownGeoKeys', t => {

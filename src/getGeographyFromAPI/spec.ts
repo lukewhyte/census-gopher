@@ -17,7 +17,8 @@ test('makeGeoRequest: should return array of Kendall County, TX Census tracts', 
 	const key = 'tract';
 	const parentString = '&in=state:48&in=county:259';
 	const kendallCountyTXCensusTracts = ['970100', '970301', '970302', '970401', '970402', '970500'];
-	let result = await makeGeoRequest(key, parentString);
+	const acsType = 5;
+	let result = await makeGeoRequest(key, parentString, acsType);
 	let expected = kendallCountyTXCensusTracts;
 	t.deepEqual(result, expected);
 	t.end();

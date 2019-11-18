@@ -1,5 +1,16 @@
 import * as test from 'tape';
-import parseArguments, { splitArg, commaSplit, splitTarget, controller } from './index';
+import parseArguments, { setAcs, splitArg, commaSplit, splitTarget, controller } from './index';
+
+test('setAcs: set the acs property, even if it was passed across', t => {
+	let result = setAcs('1');
+	let expected = 1;
+	t.equal(result, expected);
+
+	result = setAcs('merp1');
+	expected = 5;
+	t.equal(result, expected);
+	t.end();
+});
 
 test('splitArg(\'hello=world\') should be split on \'=\' and return { key: \'hello\', val: \'world\' }', t => {
 	let result = splitArg('hello=world');
@@ -71,9 +82,16 @@ test('run the whole parseArguments module', t => {
 			target: { key: 'county', val: ['*'] },
 			ids: [ '037836', '873836' ],
      		years: [ '1997', '1998' ],
-     		filename: 'blerk.csv',
+			filename: 'blerk.csv',
+			acsType: 5,
 		},
 	};
 	t.deepEqual(result, expected);
+
+	args.push('acsType=1');
+	result = parseArguments(args);
+	expected.payload.acsType = 1;
+	t.deepEqual(result, expected);
+
 	t.end();
 });

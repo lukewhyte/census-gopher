@@ -24,7 +24,7 @@ if (parsedArguments.isSuccessful) {
 
 	const buildWorkbookArr = async (vars: VarsHash) => {
 		const queryList: Array<VariableQuery> = await getListOfQueries(vars, geoKeysHash);
-		return executeQueries(queryList, geoKeysHash);
+		return executeQueries(queryList, geoKeysHash, vars.acsType);
 	};
 
 	buildWorkbookArr(vars).then((workbookArr: Array<SheetHash>) => {

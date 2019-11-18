@@ -21,7 +21,7 @@ if (parsedArguments.isSuccessful) {
     const geoKeysHash = variableMappingUtils_1.default.unpackGeoKeys(vars);
     const buildWorkbookArr = (vars) => __awaiter(this, void 0, void 0, function* () {
         const queryList = yield getListOfQueries_1.default(vars, geoKeysHash);
-        return executeQueries_1.default(queryList, geoKeysHash);
+        return executeQueries_1.default(queryList, geoKeysHash, vars.acsType);
     });
     buildWorkbookArr(vars).then((workbookArr) => {
         exportToExcel_1.default(workbookArr, vars.filename);

@@ -12,6 +12,7 @@ test('addKnownGeographyToList: three single id geographies', async t => {
 		ids: ['q34af', 'asf3r4'],
 		years: ['1998'],
 		filename: 'test.xlsx',
+		acsType: 1,
 	};
 	const knownGeoKeys = ['state', 'county', 'tract'];
 	let result = await addKnownGeographyToList([{}], knownGeoKeys, vars);
@@ -30,6 +31,7 @@ test('addKnownGeographyToList: a single id followed by a triple id geography', a
 		ids: ['q34af', 'asf3r4'],
 		years: ['1998'],
 		filename: 'test.xlsx',
+		acsType: 5,
 	};
 	const knownGeoKeys = ['state', 'county'];
 	let result = await addKnownGeographyToList([{}], knownGeoKeys, vars);
@@ -51,6 +53,7 @@ test('addKnownGeographyToList: a single id followed by a double, followed by a t
 		ids: ['q34af', 'asf3r4'],
 		years: ['1998'],
 		filename: 'test.xlsx',
+		acsType: 5,
 	};
 	const knownGeoKeys = ['state', 'county', 'tract'];
 	let result = await addKnownGeographyToList([{}], knownGeoKeys, vars);
@@ -74,6 +77,7 @@ test('addUnknownGeographyToList: single state and county, get all tracts', async
 		ids: ['q34af', 'asf3r4'],
 		years: ['1998'],
 		filename: 'test.xlsx',
+		acsType: 5,
 	};
 	const unknownGeoKeys = ['tract'];
 	const queryList = [{ state: '48', county: '259' }];
@@ -98,6 +102,7 @@ test('addUnknownGeographyToList: single state and two counties, get all tracts',
 		ids: ['q34af', 'asf3r4'],
 		years: ['1998'],
 		filename: 'test.xlsx',
+		acsType: 5,
 	};
 	const unknownGeoKeys = ['tract'];
 	const queryList = [{ state: '48', county: '259' }, { state: '48', county: '261' }];
@@ -123,6 +128,7 @@ test('addUnknownGeographyToList: two known states, get all counties and tracts',
 		ids: ['q34af', 'asf3r4'],
 		years: ['1998'],
 		filename: 'test.xlsx',
+		acsType: 5,
 	};
 	const unknownGeoKeys = ['county', 'tract'];
 	const queryList = [{ state: '10' }, { state: '44' }];
@@ -138,6 +144,7 @@ test('addUnknownGeographyToList: if there\'s no known geography, still populate'
 		ids: ['q34af', 'asf3r4'],
 		years: ['1998'],
 		filename: 'test.xlsx',
+		acsType: 1,
 	};
 	const unknownGeoKeys = ['state'];
 	const queryList = [{}];

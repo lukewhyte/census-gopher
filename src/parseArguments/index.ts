@@ -15,7 +15,13 @@ const keyMap = {
 	years: val => commaSplit(val),
 	target: val => splitTarget(val),
 	filename: val => val,
+	acsType: val => setAcs(val),
 };
+
+export const setAcs = (val: string) => {
+	const acs = parseInt(val, 10);
+	return acs === 1 || acs === 5 ? acs : 5;
+}
 
 // returns and array split on the commas, often will have length: 1
 export const commaSplit = (val: string) => {
@@ -54,4 +60,8 @@ export const controller = (result: ParsedArguments, arg: string) => {
 	return result;
 };
 
-export default (args: Array<string>) => _.reduce(args, controller, { isSuccessful: true, payload: {} });
+export default (args: Array<string>) => _.reduce(
+	args,
+	controller,
+	{ isSuccessful: true, payload: { acsType: 5 } } // Make sure we get that acsType assigned
+);

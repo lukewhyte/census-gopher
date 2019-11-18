@@ -15,6 +15,7 @@ export interface VarsHash {
 	ids: Array<string>;
 	years: Array<string>;
 	filename: string;
+	acsType: number; // 5 or 1 are the only acceptable inputs
 };
 
 export interface GeoKeysHash {

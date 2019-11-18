@@ -4,6 +4,7 @@ import * as test from 'tape';
 import { 
 	buildGeoKeyArray,
 	addYearToString,
+	addAcsType,
 	addIDsToString,
 	addTargetToString,
 	addParentsToString,
@@ -28,31 +29,40 @@ test('buildGeoKeyArray: takes a GeoHashKey and concats the unknownKeys to the kn
 });
 
 test('addYearToString: takes a queryString and a year, adds the correct path, accounting for variation in paths', t => {
-	const years = ['2016', '2013'];
+	const years = ['2016', '2009'];
 	const queryString = 'https://api.census.gov/data/';
 	let result = addYearToString(queryString, years[0]);
 	let expected = 'https://api.census.gov/data/2016/acs/';
 	t.equal(result, expected);
 	result = addYearToString(queryString, years[1]);
-	expected = 'https://api.census.gov/data/2013/';
+	expected = 'https://api.census.gov/data/2009/';
 	t.equal(result, expected);
 	t.end();
 });
 
+test('addAcsType: takes query string and number and returns string following API syntax', t => {
+	const acsType = 1;
+	const queryString = 'https://api.census.gov/data/2015/acs/';
+	let result = addAcsType(queryString, acsType);
+	let expected = 'https://api.census.gov/data/2015/acs/acs1?';
+	t.equal(result, expected);
+	t.end();
+})
+
 test('addIDsToString: takes queryString and ids array, concats ids to string following API syntax', t => {
 	const ids = [ 'B01001_002E', 'B01001_026E' ];
-	const queryString = 'https://api.census.gov/data/2015/acs5?';
+	const queryString = 'https://api.census.gov/data/2015/acs/acs5?';
 	let result = addIDsToString(queryString, ids);
-	let expected = 'https://api.census.gov/data/2015/acs5?get=NAME,B01001_002E,B01001_026E&';
+	let expected = 'https://api.census.gov/data/2015/acs/acs5?get=NAME,B01001_002E,B01001_026E&';
 	t.equal(result, expected);
 	t.end();
 });
 
 test('addTargetToString: takes queryString and target hash, concats hash key/vals to string following API syntax', t => {
 	const target = { key: 'county', val: ['234', '255'] };
-	const queryString = 'https://api.census.gov/data/2015/acs5?get=NAME,B01001_002E,B01001_026E&';
+	const queryString = 'https://api.census.gov/data/2015/acs/acs5?get=NAME,B01001_002E,B01001_026E&';
 	let result = addTargetToString(queryString, target);
-	let expected = 'https://api.census.gov/data/2015/acs5?get=NAME,B01001_002E,B01001_026E&for=county:234,255&';
+	let expected = 'https://api.census.gov/data/2015/acs/acs5?get=NAME,B01001_002E,B01001_026E&for=county:234,255&';
 	t.equal(result, expected);
 	t.end();
 });
@@ -66,9 +76,9 @@ test('addParentsToString: takes queryString, geoKeys arr and VariableHash concat
 		ids: ['q34af', 'asf3r4']
 	};
 	const geoKeys = ['state', 'county'];
-	const queryString = 'https://api.census.gov/data/2015/acs5?get=NAME,B01001_002E,B01001_026E&for=tract:00208&';
+	const queryString = 'https://api.census.gov/data/2015/acs/acs5?get=NAME,B01001_002E,B01001_026E&for=tract:00208&';
 	let result = addParentsToString(queryString, hash, geoKeys);
-	let expected = 'https://api.census.gov/data/2015/acs5?get=NAME,B01001_002E,B01001_026E&for=tract:00208&in=state:48&in=county:259&';
+	let expected = 'https://api.census.gov/data/2015/acs/acs5?get=NAME,B01001_002E,B01001_026E&for=tract:00208&in=state:48&in=county:259&';
 	t.equal(result, expected);
 	t.end();
 });
@@ -81,7 +91,7 @@ test('getVariablesFromAPI: make a properly formed API request', async t => {
 		year: '2015',
 		ids: ['B01001_002E', 'B01001_026E']
 	};
-	const baseURL = 'https://api.census.gov/data/2015/acs5?';
+	const baseURL = 'https://api.census.gov/data/2015/acs/acs5?';
 	const query = `${baseURL}get=NAME,B01001_002E,B01001_026E&for=tract:*&in=state:48&in=county:259&key=${apiKey}`;
 	let result = await getVariablesFromAPI(query, hash, ['B01001_002E']);
 	let expected = [

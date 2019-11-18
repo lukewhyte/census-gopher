@@ -23,12 +23,13 @@ export const buildResponseHeader = (queryList: Array<VariableQuery>, geoKeys: Ar
 };
 
 export const addYearToString = (queryString: string, year: string) => {
-	const newAPIFormatYears: Array<string> = ['2016', '2015']; // this will need to be updated and eventually removed
-	newAPIFormatYears.forEach((curr: string) => {
-		if (year === curr) year += '/acs';
-	});
+	if (parseInt(year, 10) > 2009) { // this will need to be updated and eventually removed
+		year += '/acs';
+	}
 	return `${queryString}${year}/`;
 };
+
+export const addAcsType = (queryString: string, acsType: number) => `${queryString}acs${acsType}?`;
 
 export const addIDsToString = (queryString: string, ids: Array<string>) => {
 	queryString += 'get=NAME,';
@@ -85,14 +86,14 @@ export const pruneResponse = (res: Array<Array<string>>, year: string, header: A
 	return { year, header, data };
 };
 
-export default (queryList: Array<VariableQuery>, geoKeysHash: GeoKeysHash) => {
+export default (queryList: Array<VariableQuery>, geoKeysHash: GeoKeysHash, acsType: number) => {
 	const geoKeys: Array<string> = buildGeoKeyArray(geoKeysHash);
 	const header: Array<string> = buildResponseHeader(queryList, geoKeys);
 
 	return Promise.all(queryList.map(async (query: VariableQuery) => {
 		let queryString: string = `${baseUrl}/`;
 		queryString = addYearToString(queryString, query.year);
-		queryString += 'acs5?'; // soon, we should make acs1 an option too 
+		queryString = addAcsType(queryString, acsType);
 		queryString = addIDsToString(queryString, query.ids);
 		queryString = addTargetToString(queryString, query.target);
 		queryString = addParentsToString(queryString, query, geoKeys);
